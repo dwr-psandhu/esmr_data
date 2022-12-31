@@ -18,3 +18,62 @@ A Variable has a name (same as Parameter), units, calculated method (such as dai
 
 Each of the concepts above has an attached pandas DataFrame, df, that is a subset corresponding that to that concept. E.g. the Facility has a df attribute that has a dataframe for just that Facility.
 
+```mermaid
+classDiagram
+class ESMR{
+df: DataFrame
+get_region_names(): list(str)
+get_facility_names(region:str): list(str)
+get_facility(name): Facility
+}
+
+class Facility{
+df: DataFrame
+name: str
+region: str
+place_id: int
+get_location_names(): list(str)
+get_location(location:str): Location
+get_locations_of_type(location_place_type='Effluent Monitoring'): list(Location)
+}
+
+class Location{
+df: DataFrame
+name: str
+facility: Facility
+place_id: int
+place_type: str
+desc: str
+get_parameter_names(): list(str)
+get_parameter(parameter): Parameter
+}
+
+class Parameter {
+df: DataFrame
+name: str
+location: Location
+get_variables(): list(Variable)
+}
+
+class Variable{
+    df: DataFrame
+    name: str
+    calculated_method: str
+    units: str
+    parameter: Parameter
+    result: DataFrame 
+    analytical_method_code: str
+    qualifier: str
+    mdl: DataFrame
+    ml: DataFrame
+    rl: DataFrame
+}
+
+ESMR *-- Facility
+Facility *-- Location
+Location --> Facility
+Location *-- Parameter
+Parameter --> Location
+Parameter *-- Variable
+Variable --> Parameter
+```
