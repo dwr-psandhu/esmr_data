@@ -40,3 +40,9 @@ dependencies:
   - networkx
   # browsers
   - autopep8
+  # browsers
+  - selenium
+  - firefox
+  - geckodriver
+  # pdf parsing
+  - tabula-py

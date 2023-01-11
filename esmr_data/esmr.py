@@ -37,23 +37,23 @@ class Variable:
         self.df = self.parameter.df.astype(
             {'calculated_method': 'str'}).replace(
             {'calculated_method': 'nan'}, '').query(
-            f'(units == "{self.units}") & (calculated_method == "{self.calculated_method}")')
+            f'(units == "{self.units}") '+
+            f'& (calculated_method == "{self.calculated_method}")')
         self.df = self.df.set_index('sampling_datetime').sort_index()
-        self.qualifier = warn_single_unique(self.df, 'qualifier')
-        # FIXME: could be nans, check analytical_method_code for type of result
         self.result = self.df.result
+        self.qualifier = "=" # FIXME:I don't understand DQ and DNQ with values in result column!
         self.analytical_method_code = warn_single_unique(
             self.df, 'analytical_method_code')
-        if self.qualifier == 'DQ' or self.qualifier == 'DNQ':
-            self.mdl = self.df[['mdl']]
-            self.ml = self.df[['ml']]
-            self.rl = self.df[['rl']]
-        else:
-            qtext = self.qualifier if self.qualifier != "=" else ""
-            ctext = "["+self.calculated_method+"]" if self.calculated_method != "" else ""
-            # FIXME: not sure how to handle multiple units specified. Selecting first one in the unique list.
-            self.result = self.df[['result']].rename(
-                {'result': f'{self.name} {ctext} ({self.units}) {qtext}'}, axis=1)
+        #if self.qualifier == 'DQ' or self.qualifier == 'DNQ':
+        self.mdl = self.df[['mdl']]
+        self.ml = self.df[['ml']]
+        self.rl = self.df[['rl']]
+        #else:
+        qtext = self.qualifier if self.qualifier != "=" else ""
+        ctext = "["+self.calculated_method+"]" if self.calculated_method != "" else ""
+        # FIXME: not sure how to handle multiple units specified. Selecting first one in the unique list.
+        self.result = self.df[['result']].rename(
+            {'result': f'{self.name} {ctext} ({self.units}) {qtext}'}, axis=1)
 
 
 @dataclass
@@ -165,7 +165,7 @@ def read_data_csv(csv_file):
     if os.path.exists(pkl_file):
         df = pd.read_pickle(pkl_file)
     else:
-        df = pd.read_csv(csv_file, dtypes=categorical_types())
+        df = pd.read_csv(csv_file, dtype=categorical_types())
         df['sampling_datetime'] = pd.to_datetime(
             df['sampling_date'] + ' ' + df['sampling_time'])
         df = df.drop(['sampling_date', 'sampling_time'], axis=1)
@@ -180,14 +180,17 @@ def build_facility_location_lat_lon(df):
     cols = ['latitude', 'longitude',
             'facility_name', 'location', 'location_desc']
     location_lat_lon = df.astype({'location': str}).groupby(
-        cols).count().reset_index()[cols]
+        cols).count().reset_index()
     # fixup obvious errors
+    # +ve longitudes not in California, reverse the sign
     lon_0plus = location_lat_lon.eval('longitude > 0')
     location_lat_lon.loc[lon_0plus, 'longitude'] = - \
         location_lat_lon.loc[lon_0plus, 'longitude']
+    # -ve latitudes not in California, reverse the sign
     lat_0minus = location_lat_lon.eval('latitude < 0')
     location_lat_lon.loc[lat_0minus, 'latitude'] = - \
         location_lat_lon.loc[lat_0minus, 'latitude']
+    # specific fix for couple of locations based on location_desc field 
     location_lat_lon.loc[location_lat_lon.eval(
         'latitude < 1'), 'latitude'] = 38+0/60.+29.73/3600.  # correction from location_desc of Lincoln Center GWT System
     location_lat_lon.loc[location_lat_lon.eval('longitude > -40'), 'longitude'] = -(
