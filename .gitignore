@@ -4,6 +4,8 @@
 tests/data
 # dss files
 *.dss
+# csv files
+*.csv
 # dask workspace
 **/dask-worker-space
 # python pickled data
