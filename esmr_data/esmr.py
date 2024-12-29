@@ -204,6 +204,8 @@ def read_data_csv(csv_file):
             df["analysis_date"] + " " + df["analysis_time"], errors="coerce"
         )
         df = df.drop(["analysis_date", "analysis_time"], axis=1)
+        df.set_index("analysis_datetime", inplace=True)
+        df.sort_index(inplace=True)
         df.to_pickle(pkl_file)
     return df
 

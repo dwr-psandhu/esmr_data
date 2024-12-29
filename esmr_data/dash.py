@@ -120,5 +120,5 @@ class ESMRDash(pn.viewable.Viewer):
                 self.map,
                 pn.Row(self.param.parameters, self.param.location_place_type),
             ),
-            self.plot_facility,
+            pn.panel(self.plot_facility, loading_indicator=True),
         )
