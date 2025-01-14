@@ -1,63 +1,71 @@
-EchoWater_Resource_Recovery_Facility_Flow:
-  - analytical_method
-  - notna
-EchoWater_Resource_Recovery_Facility_Temperature:
-  - calculated_method
-  - Daily Average (Mean)
-EchoWater_Resource_Recovery_Facility_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - E120.1
-Mountain_House_WWTP_Flow:
-  - analytical_method_code
-  - DU
-Mountain_House_WWTP_Temperature:
-  - calculated_method
-  - Daily Average (Mean)
-Mountain_House_WWTP_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
-Tracy_WWTP_Flow:
-  - analytical_method_code
-  - notna
-Tracy_WWTP_Temperature:
-  - calculated_method
-  - Daily Average (Mean)
-Tracy_WWTP_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
-City_of_Manteca_WW_Quality_Control_Facility_Flow:
-  - analytical_method_code
-  - notna
-City_of_Manteca_WW_Quality_Control_Facility_Temperature:
-  - calculated_method
-  - Daily Average (Mean)
-City_of_Manteca_WW_Quality_Control_Facility_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
-Stockton_Regional_WW_Control_Facility_Flow:
-  - analytical_method_code
-  - notna
-Stockton_Regional_WW_Control_Facility_Temperature:
-  - calculated_method
-  - Daily Average (Mean)
-Stockton_Regional_WW_Control_Facility_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
-Brentwood_WWTP_Flow:
-  - analytical_method_code
-  - notna
-Brentwood_WWTP_Temperature:
-  - analytical_method_code
-  - notna
-Brentwood_WWTP_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
-White_Slough_Water_Pollution_Control_Facility_Flow:
-  - analytical_method_code
-  - notna
-White_Slough_Water_Pollution_Control_Facility_Temperature:
-  - calculated_method
-  - 24-hour Average
-White_Slough_Water_Pollution_Control_Facility_Electrical_Conductivity_@_25_Deg._C:
-  - analytical_method_code
-  - notna
+EchoWater_Resource_Recovery_Facility:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: Daily Average (Mean)
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: E120.1
+Mountain_House_WWTP:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: DU
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: Daily Average (Mean)
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+Tracy_WWTP:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: Daily Average (Mean)
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+City_of_Manteca_WW_Quality_Control_Facility:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: Daily Average (Mean)
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+Stockton_Regional_WW_Control_Facility:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: Daily Average (Mean)
+    units: Degrees C
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+Brentwood_WWTP:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+White_Slough_Water_Pollution_Control_Facility:
+  Flow:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna
+  Temperature:
+    location_place_type: Effluent Monitoring
+    calculated_method: 24-hour Average
+  Electrical_Conductivity_@_25_Deg._C:
+    location_place_type: Effluent Monitoring
+    analytical_method_code: notna

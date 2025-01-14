@@ -10,9 +10,7 @@ import io
 import logging
 import yaml
 import argparse
-import esmr
 
-# add name of this class to the logger instead of root logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
@@ -73,47 +71,46 @@ def download_and_unzip(url, extract_to="."):
 
 
 def process_csv(esmr_file, filter_conditions, extract_to="."):
+    from esmr_data import esmr
 
     df = esmr.read_data_csv(esmr_file)
     data = esmr.ESMR(df)
     logger.info(f"Number of WWTP facilities : {len(data.get_facility_names())}")
 
     # Extract facility names from filter_conditions
-    facility_names = set()
-    for key in filter_conditions.keys():
-        # facility name is the name after "_" of Flow,
-        if key.endswith("_Flow"):
-            facility_name = "_".join(key.split("_")[:-1])
-            facility_name = facility_name.replace("_", " ")
-        facility_names.add(facility_name)
-    facility_names = list(facility_names)
+    facility_names = filter_conditions.keys()
 
-    parameters = ["Flow", "Temperature", "Electrical Conductivity @ 25 Deg. C"]
     dfmap = {}
     for facility_name in facility_names:
         logger.info(f"Processing facility: {facility_name}")
-        for parameter in parameters:
+        for parameter, conditions in filter_conditions[facility_name].items():
+            location_place_type = conditions.pop("location_place_type")
             dff = df[
-                (df.facility_name == facility_name)
-                & (df.location_place_type == "Effluent Monitoring")
-                & (df.parameter == parameter)
+                (df.facility_name == facility_name.replace("_", " "))
+                & (df.location_place_type == location_place_type)
+                & (df.parameter == parameter.replace("_", " "))
             ]
             fname = facility_name.replace(" ", "_").replace("/", "_")
             pname = parameter.replace(" ", "_")
             dfmap[f"{fname}_{pname}"] = dff
 
     plotmap = {}
-    for key, (column, condition) in filter_conditions.items():
-        dfk = dfmap[key]
-        if condition == "notna":
-            filter_condition = dfk[column].notna()
-        else:
-            filter_condition = dfk[column] == condition
-        dfr = extract_result(dfk, filter_condition, key)
-        metadata = get_columns_unique_vals(dfk)
-        plotmap[key] = (dfr, metadata)
-        fname = os.path.join(extract_to, f"{key}.csv")
-        write_out_data(dfr, metadata, fname)
+    for facility_name, parameters in filter_conditions.items():
+        for parameter, conditions in parameters.items():
+            key = f"{facility_name}_{parameter}"
+            dfk = dfmap[key]
+            filter_condition = pd.Series([True] * len(dfk), index=dfk.index)
+            for column, condition in conditions.items():
+                if condition == "notna":
+                    filter_condition &= dfk[column].notna()
+                else:
+                    filter_condition &= dfk[column] == condition
+            filtered_indices = filter_condition[filter_condition.index.isin(dfk.index)]
+            dfr = extract_result(dfk, filter_condition, key)
+            metadata = get_columns_unique_vals(dfk)
+            plotmap[key] = (dfr, metadata)
+            fname = os.path.join(extract_to, f"{key}.csv")
+            write_out_data(dfr, metadata, fname)
 
     return plotmap
 
