@@ -10,6 +10,7 @@ import io
 import logging
 import yaml
 import argparse
+import esmr
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -71,7 +72,6 @@ def download_and_unzip(url, extract_to="."):
 
 
 def process_csv(esmr_file, filter_conditions, extract_to="."):
-    from esmr_data import esmr
 
     df = esmr.read_data_csv(esmr_file)
     data = esmr.ESMR(df)
