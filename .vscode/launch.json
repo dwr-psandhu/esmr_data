@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        //python esmr_extract_potws.py --url "https://data.ca.gov/dataset/water-quality-effluent-electronic-self-monitoring-report-esmr-data" --config "filter_conditions.yaml" --extract_to "../demo/raw-esmr"
+        {
+            "name": "esmr_extract_potws",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/esmr_data",
+            "program": "esmr_extract_potws.py",
+            "args": [
+                "--skip-download",
+                "--url",
+                "https://data.ca.gov/dataset/water-quality-effluent-electronic-self-monitoring-report-esmr-data",
+                "--config",
+                "filter_conditions.yaml",
+                "--extract_to",
+                "../tests/data"
+            ]
+        }
+    ]
+}
