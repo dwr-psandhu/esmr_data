@@ -196,11 +196,16 @@ def main():
     else:
         # find local file starging with esmr ending with .csv
         esmr_file = None
-        for file in os.listdir(args.extract_to):
-            if file.startswith("esmr") and file.endswith(".csv"):
-                esmr_file = os.path.join(args.extract_to, file)
-                break
+        # Find the latest ESMR file in the directory
+        esmr_files = [
+            os.path.join(args.extract_to, file)
+            for file in os.listdir(args.extract_to)
+            if file.startswith("esmr") and file.endswith(".csv")
+        ]
+        if esmr_files:
+            esmr_file = max(esmr_files, key=os.path.getctime)
     if esmr_file:
+        logger.info(f"Processing ESMR file: {esmr_file}")
         plotmap = process_csv(esmr_file, filter_conditions, args.extract_to)
         if args.plot:
             plot_data(plotmap)
