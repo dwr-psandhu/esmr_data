@@ -188,7 +188,8 @@ def main():
 
     with open(args.config, "r") as f:
         filter_conditions = yaml.safe_load(f)
-    if not os.exists(args.extract_to):
+    # Ensure the extract_to directory exists
+    if not os.path.exists(args.extract_to):
         os.makedirs(args.extract_to)
     if not args.skip_download:
         esmr_file = download_and_unzip(args.url, args.extract_to)
