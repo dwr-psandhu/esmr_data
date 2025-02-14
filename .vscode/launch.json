@@ -20,6 +20,20 @@
                 "--extract_to",
                 "../tests/data"
             ]
+        },
+        // esmr_data show-dash "Y:\repo_staging_auto\dropbox\esmr\raw\esmr-analytical-export_years-2006-2025_2025-02-04.csv"
+        {
+            "name": "esmr_show_dash",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "esmr_data.cli",
+            "args": [
+                "show-dash",
+                "Y:\\repo_staging_auto\\dropbox\\esmr\\raw\\esmr-analytical-export_years-2006-2025_2025-02-04.csv"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
         }
     ]
 }

@@ -1,38 +1,35 @@
-from argparse import ArgumentParser
-from esmr_data import __version__
+import sys
+import click
+import logging
+from esmr_data import esmr, dash
 
-def subcommand1(args):
-    print('Do something with subcommand 1', args)
-
-def cli(args=None):
-    p = ArgumentParser(
-        description="Electronic Self Monitoring Data",
-        conflict_handler='resolve'
-    )
-    p.set_defaults(func=lambda args: p.print_help())
-    p.add_argument(
-        '-V', '--version',
-        action='version',
-        help='Show the conda-prefix-replacement version number and exit.',
-        version="esmr_data %s" % __version__,
-    )
-
-    # do something with the sub commands
-    sub_p = p.add_subparsers(help='sub-command help')
-    # add show all sensors command
-    subcmd1 = sub_p.add_parser('sub1', help='subcommand 1')
-    subcmd1.add_argument('--input-file', type=str, required=False, help='an input file argument')
-    subcmd1.set_defaults(func=subcommand1)
-
-    # Now call the appropriate response.
-    pargs = p.parse_args(args)
-    pargs.func(pargs)
-    return 
-    # No return value means no error.
-    # Return a value of 1 or higher to signify an error.
-    # See https://docs.python.org/3/library/sys.html#sys.exit
+# Configure logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-if __name__ == '__main__':
-    import sys
-    cli(sys.argv[1:])
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+
+
+@click.group(context_settings=CONTEXT_SETTINGS)
+def main():
+    pass
+
+
+@click.command()
+@click.argument("esmr_csv_file", type=click.Path(exists=True))
+def show_dash(esmr_csv_file):
+    """
+    Show the ESMR Dash application
+    """
+    logger.info("Reading data from %s", esmr_csv_file)
+    df = esmr.read_data_csv(esmr_csv_file)
+    logger.info("Creating ESMR data dashboard")
+    data = esmr.ESMR(df)
+    ui = dash.ESMRDash(data)
+    ui.show()
+
+
+main.add_command(show_dash)
+if __name__ == "__main__":
+    sys.exit(main())  # pragma: no cover
